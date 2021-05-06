@@ -5,7 +5,7 @@ import os
 import smtplib
 
 PINCODE = 110027
-AGE = 45
+AGE = 25
 
 def get_next_10_dates():
 	dates = []
