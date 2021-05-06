@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 import requests
 import sys
+import os
+import smtplib
 
 PINCODE = 110027
 AGE = 45
@@ -30,6 +32,18 @@ def get_slots_for_date(d):
 		print(response.text)
 	return None
 
+def send_email():
+	sender_email = os.environ['SENDER_EMAIL']
+	pwd = os.environ['SENDER_PWD']
+	receiver_email = os.environ['RECEIVER_EMAIL']
+
+	s = smtplib.SMTP('smtp.gmail.com', 587)
+	s.starttls()
+	s.login(sender_email, pwd)
+	message = 'Subject: {}\n\n{}'.format("Vaccinator: Vaccine slots available!", "")
+	s.sendmail(sender_email, receiver_email, message)
+	s.quit()
+
 
 if __name__ == "__main__":
 	dates = get_next_10_dates()
@@ -40,3 +54,5 @@ if __name__ == "__main__":
 			available_slots.extend(slots)
 	if len(available_slots) > 0:
 		print("Slots are available. Notifying...")
+		send_email()
+	
